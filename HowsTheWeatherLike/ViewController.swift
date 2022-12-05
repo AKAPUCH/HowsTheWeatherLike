@@ -16,11 +16,10 @@ class ViewController: UIViewController {
     
     lazy var table : UITableView = {
        let tableSettings = UITableView()
-
+        tableSettings.translatesAutoresizingMaskIntoConstraints = false
         return tableSettings
     }()
-    
-    
+
     
     //functions
     
@@ -43,18 +42,33 @@ class ViewController: UIViewController {
         self.table.reloadData()
     }
     
+    func setConstraint() {
+        NSLayoutConstraint.activate([
+        table.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,constant: 100),
+        table.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+        table.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+        table.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
+    func setNavi() {
+        self.navigationController?.navigationBar.topItem?.title = "현재날씨"
+    }
     //override functions
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        tableSetup()
+        setNavi()
+        //getJsonData()
     }
     
     override func loadView() {
+        super.loadView()
         view.backgroundColor = .white
-        view.addSubview(table)
-        tableSetup()
-        getJsonData()
+        
+        //view.addSubview(table)
+        //tableSetup()
+        //setConstraint()
     }
 
 

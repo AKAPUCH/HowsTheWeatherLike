@@ -38,7 +38,7 @@ extension CustomCell {
         
         label.text = model.korean_name
         
-        let imageAsset : UIImage = UIImage(systemName: "(\(model.asset_name))")!
+        guard let imageAsset : UIImage = UIImage(systemName: "(\(model.asset_name))") else {return}
         leftImageView.image = imageAsset
     }
 }
