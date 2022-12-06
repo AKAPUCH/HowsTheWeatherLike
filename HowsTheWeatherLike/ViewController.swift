@@ -52,7 +52,16 @@ class ViewController: UIViewController {
     }
     
     func setNavi() {
-        self.navigationController?.navigationBar.topItem?.title = "현재날씨"
+        //self.navigationController?.navigationBar.topItem?.title = "세계 날씨"
+        navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationItem.title = "세계날씨"
+        self.navigationController?.navigationItem.titleView?.tintColor = .white
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        
+        appearance.backgroundColor = .systemBlue
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
     }
     //override functions
     override func viewDidLoad() {

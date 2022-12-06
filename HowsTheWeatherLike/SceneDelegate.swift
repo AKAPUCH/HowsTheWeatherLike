@@ -21,7 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scenes = (scene as? UIWindowScene) else {return}
         window = UIWindow(windowScene: scenes)
         let mainViewController = ViewController() // 첫 화면의 viewController 이름 입니다.
-        window?.rootViewController = mainViewController
+        let navcontroller = UINavigationController(rootViewController: mainViewController)
+        window?.rootViewController = navcontroller
         window?.makeKeyAndVisible()
         
     }
