@@ -37,8 +37,7 @@ extension CustomCell {
     func bind(model : NationWeatherM) {
         
         label.text = model.korean_name
-        
-        guard let imageAsset : UIImage = UIImage(systemName: "(\(model.asset_name))") else {return}
+        guard let imageAsset : UIImage = UIImage.init(named: "flag_"+"\(model.asset_name)") else {return}
         leftImageView.image = imageAsset
     }
 }

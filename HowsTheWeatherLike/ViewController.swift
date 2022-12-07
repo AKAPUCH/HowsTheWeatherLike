@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import SnapKit
 class ViewController: UIViewController {
     
     //변수 정의
@@ -17,6 +17,8 @@ class ViewController: UIViewController {
     lazy var table : UITableView = {
        let tableSettings = UITableView()
         tableSettings.translatesAutoresizingMaskIntoConstraints = false
+        tableSettings.fillerRowHeight = 50
+        // ios 15이상부터는 cell의 개수만큼만 구분선 생성. 따로 프로퍼티값을 지정해 구분선을 미리 그려줘야함.
         return tableSettings
     }()
 
@@ -24,9 +26,10 @@ class ViewController: UIViewController {
     //functions
     
     func tableSetup() {
-        table.register(CustomCell.self, forCellReuseIdentifier: CustomCell.identifier)
+        
         table.delegate = self
         table.dataSource = self
+        table.register(UITableViewCell.self, forCellReuseIdentifier: "TableViewCell")
     }
     
     func getJsonData() {
@@ -43,41 +46,37 @@ class ViewController: UIViewController {
     }
     
     func setConstraint() {
-        NSLayoutConstraint.activate([
-        table.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,constant: 100),
-        table.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-        table.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-        table.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
+        table.snp.makeConstraints{cons in
+            cons.top.leading.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide)
+        }
     }
     
     func setNavi() {
-        //self.navigationController?.navigationBar.topItem?.title = "세계 날씨"
-        navigationController?.navigationBar.barStyle = .black
-        self.navigationController?.navigationItem.title = "세계날씨"
-        self.navigationController?.navigationItem.titleView?.tintColor = .white
-        let appearance = UINavigationBarAppearance()
+        navigationController?.navigationBar.barStyle = .black // 상태바 항목들 색 흰색변경(다크모드를 위한)
+        self.navigationController?.navigationBar.topItem?.title = "세계 날씨"
+        let appearance = UINavigationBarAppearance() //ios 15이상부터는 해당 객체의 프로퍼티로 UI변경가능
         appearance.configureWithOpaqueBackground()
-        
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.backgroundColor = .systemBlue
-        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.standardAppearance = appearance // 스크롤할 때 적용
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
+        //스크롤 멈춘상태에 적용
     }
     //override functions
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        setNavi()
-        //getJsonData()
+        
+        getJsonData()
     }
     
     override func loadView() {
         super.loadView()
         view.backgroundColor = .white
-        
-        //view.addSubview(table)
-        //tableSetup()
-        //setConstraint()
+        setNavi()
+        tableSetup()
+        view.addSubview(table)
+        setConstraint()
     }
 
 
@@ -88,13 +87,15 @@ class ViewController: UIViewController {
 extension ViewController : UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.countries.count
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CustomCell.identifier) as? CustomCell ?? CustomCell()
-        
-        cell.bind(model: countries[indexPath.row])
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell")! as UITableViewCell
+    let model =  countries[indexPath.row]
+        cell.textLabel?.text = model.korean_name
+        cell.imageView?.image = UIImage.init(named: "flag_\(model.asset_name)")
+        //커스텀셀 없이 기본 셀 사용
         return cell
     }
     
