@@ -6,13 +6,14 @@
 //
 
 import UIKit
+import SwiftUI
 import SnapKit
 class ViewController: UIViewController {
     
     //변수 정의
-    
+    let weatherInfo : WeatherInfo = WeatherInfo.shared
     var countries : [NationWeatherM] = []
-    var weatherDetail : [NationWeatherD] = []
+    
     
     lazy var table : UITableView = {
        let tableSettings = UITableView()
@@ -78,7 +79,8 @@ class ViewController: UIViewController {
         view.addSubview(table)
         setConstraint()
     }
-
+    
+    
 
 }
 
@@ -95,6 +97,8 @@ extension ViewController : UITableViewDelegate,UITableViewDataSource {
     let model =  countries[indexPath.row]
         cell.textLabel?.text = model.korean_name
         cell.imageView?.image = UIImage.init(named: "flag_\(model.asset_name)")
+        cell.accessoryType = .detailButton
+        
         //커스텀셀 없이 기본 셀 사용
         return cell
     }
@@ -103,7 +107,33 @@ extension ViewController : UITableViewDelegate,UITableViewDataSource {
         return 50
     }
     
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let currentInfo = countries[indexPath.row]
+        weatherInfo.registerKorean_Name(currentInfo.korean_name)
+        weatherInfo.registerAsset_Name(currentInfo.asset_name)
+        self.navigationController?.pushViewController(DetailViewController(), animated: true)
+    }
+    
+    
     
 }
+
+#if DEBUG
+struct ViewControllerRepresentation : UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        return ViewController()
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        
+    }
+}
+
+struct ViewController_Previews: PreviewProvider {
+    static var previews: some View {
+        ViewControllerRepresentation()
+    }
+}
+#endif
 
 
