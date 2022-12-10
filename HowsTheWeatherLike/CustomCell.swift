@@ -49,6 +49,7 @@ class CustomCell : UITableViewCell {
     let detailButton : UIButton = {
         let settings = UIButton(type: .detailDisclosure)
         settings.translatesAutoresizingMaskIntoConstraints = false
+        return settings
     }()
     
     override init(style : UITableViewCell.CellStyle, reuseIdentifier : String?) {
@@ -69,8 +70,8 @@ class CustomCell : UITableViewCell {
         }
         stack.snp.makeConstraints{make in
             make.top.bottom.equalTo(contentView)
-            make.leading.equalTo(leftImageView)
-            make.trailing.equalTo(detailButton)
+            make.leading.equalTo(leftImageView.snp.trailing)
+            make.trailing.equalTo(detailButton.snp.leading)
         }
 
     }

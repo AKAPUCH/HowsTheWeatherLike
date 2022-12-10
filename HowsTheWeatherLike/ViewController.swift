@@ -55,6 +55,10 @@ class ViewController: UIViewController {
     func setNavi() {
         navigationController?.navigationBar.barStyle = .black // 상태바 항목들 색 흰색변경(다크모드를 위한)
         self.navigationController?.navigationBar.topItem?.title = "세계 날씨"
+        let backButton = UIBarButtonItem()
+        backButton.title = "세계 날씨"
+        backButton.tintColor = .white
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         let appearance = UINavigationBarAppearance() //ios 15이상부터는 해당 객체의 프로퍼티로 UI변경가능
         appearance.configureWithOpaqueBackground()
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
@@ -113,6 +117,9 @@ extension ViewController : UITableViewDelegate,UITableViewDataSource {
         weatherInfo.registerAsset_Name(currentInfo.asset_name)
         self.navigationController?.pushViewController(DetailViewController(), animated: true)
     }
+    
+        
+    
     
     
     

@@ -23,7 +23,9 @@ class DetailViewController: UIViewController {
     //func
     func setConstraint() {
         view.addSubview(table)
-        table
+        table.snp.makeConstraints{make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
     //override func
@@ -46,20 +48,19 @@ class DetailViewController: UIViewController {
         super.loadView()
         view.backgroundColor = .white
         self.navigationController?.navigationBar.barStyle = .black
-        self.navigationController?.navigationBar.topItem?.title = weatherInfo.getKorean_Name()
-        var appearance = UINavigationBarAppearance()
+        navigationItem.title = weatherInfo.getKorean_Name()
+        let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.backgroundColor = .systemBlue
         self.navigationController?.navigationBar.standardAppearance = appearance
-        self.navigationController?.navigationBar.scrollEdgeAppearance =
-        self.navigationController?.navigationBar.standardAppearance
-        
+        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
         table.delegate = self
         table.dataSource = self
         table.register(CustomCell.self, forCellReuseIdentifier: "CustomCell")
+        setConstraint()
     }
-    
+    //commit
 
     /*
     // MARK: - Navigation
@@ -81,28 +82,25 @@ extension DetailViewController : UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell") as! CustomCell
         let model = weatherDetail[indexPath.row]
-        cell.accessoryType = .disclosureIndicator
-        cell.defaultContentConfiguration()?.text = model.
+        determineImage(model.state, cell)
+        cell.nationLabel.text = "\(model.city_name)"
+        cell.weatherLabel.text = "섭씨 \(model.celsius)도 / 화씨 \((model.celsius)*32*9/5+32)도"
+        cell.rainyLabel.text = "강수확률 \(model.rainfall_probability)%"
         return cell
     }
     
-    
-}
-
-#if DEBUG
-struct ViewControllerRepresentation2 : UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> UIViewController {
-        return DetailViewController()
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
     }
     
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-        
+    func determineImage(_ state : Int, _ cell : CustomCell) {
+        switch state {
+        case 10: cell.leftImageView.image = UIImage.init(named: "sunny")
+        case 11: cell.leftImageView.image = UIImage.init(named: "cloudy")
+        case 12: cell.leftImageView.image = UIImage.init(named: "rainy")
+        case 13: cell.leftImageView.image = UIImage.init(named: "snowy")
+        default:
+            print("something missed")
+        }
     }
 }
-
-struct ViewController_Previews2: PreviewProvider {
-    static var previews: some View {
-        ViewControllerRepresentation2()
-    }
-}
-#endif
