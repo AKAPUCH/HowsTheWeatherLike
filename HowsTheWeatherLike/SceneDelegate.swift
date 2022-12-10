@@ -22,6 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scenes)
         let mainViewController = ViewController() // 첫 화면의 viewController 이름 입니다.
         let navcontroller = UINavigationController(rootViewController: mainViewController)
+        navcontroller.navigationBar.barStyle = .black
         window?.rootViewController = navcontroller
         window?.makeKeyAndVisible()
         

@@ -13,6 +13,8 @@ class CustomCell : UITableViewCell {
     
     lazy var leftImageView : UIImageView  = {
        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
@@ -46,12 +48,6 @@ class CustomCell : UITableViewCell {
         return label
     }()
     
-    let detailButton : UIButton = {
-        let settings = UIButton(type: .detailDisclosure)
-        settings.translatesAutoresizingMaskIntoConstraints = false
-        return settings
-    }()
-    
     override init(style : UITableViewCell.CellStyle, reuseIdentifier : String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(leftImageView)
@@ -59,20 +55,17 @@ class CustomCell : UITableViewCell {
         stack.addArrangedSubview(nationLabel)
         stack.addArrangedSubview(weatherLabel)
         stack.addArrangedSubview(rainyLabel)
-        contentView.addSubview(detailButton)
-        detailButton.snp.makeConstraints{make in
-            make.top.trailing.bottom.equalTo(contentView)
-            make.width.equalTo(contentView).multipliedBy(0.1)
-        }
         leftImageView.snp.makeConstraints{make in
             make.leading.top.bottom.equalTo(contentView)
-            make.width.equalTo(contentView).multipliedBy(0.2)
+            make.width.equalTo(contentView).multipliedBy(0.3)
         }
         stack.snp.makeConstraints{make in
-            make.top.bottom.equalTo(contentView)
+            make.top.bottom.trailing.equalTo(contentView)
             make.leading.equalTo(leftImageView.snp.trailing)
-            make.trailing.equalTo(detailButton.snp.leading)
+            
         }
+        
+        self.accessoryType = .disclosureIndicator
 
     }
     

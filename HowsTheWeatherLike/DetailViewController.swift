@@ -47,20 +47,17 @@ class DetailViewController: UIViewController {
     override func loadView() {
         super.loadView()
         view.backgroundColor = .white
-        self.navigationController?.navigationBar.barStyle = .black
         navigationItem.title = weatherInfo.getKorean_Name()
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        appearance.backgroundColor = .systemBlue
-        self.navigationController?.navigationBar.standardAppearance = appearance
-        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
+        let backButton = UIBarButtonItem()
+        backButton.title = "세계 날씨"
+        backButton.tintColor = .white
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         table.delegate = self
         table.dataSource = self
         table.register(CustomCell.self, forCellReuseIdentifier: "CustomCell")
         setConstraint()
     }
-    //commit
+    
 
     /*
     // MARK: - Navigation
@@ -84,13 +81,27 @@ extension DetailViewController : UITableViewDelegate,UITableViewDataSource{
         let model = weatherDetail[indexPath.row]
         determineImage(model.state, cell)
         cell.nationLabel.text = "\(model.city_name)"
-        cell.weatherLabel.text = "섭씨 \(model.celsius)도 / 화씨 \((model.celsius)*32*9/5+32)도"
+        cell.weatherLabel.text = "섭씨 \(model.celsius)도 / 화씨 \(round(((model.celsius)*9/5+32)*10)/10)도"
         cell.rainyLabel.text = "강수확률 \(model.rainfall_probability)%"
+        
+        if model.rainfall_probability >= 50 {cell.rainyLabel.textColor = .systemOrange}
+        else {cell.rainyLabel.textColor = .black}
+        if model.celsius < 10.0 {cell.weatherLabel.textColor = .systemBlue}
+        else {cell.weatherLabel.textColor = .black}
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let currentInfo = weatherDetail[indexPath.row]
+        weatherInfo.registerState(currentInfo.state)
+        weatherInfo.registerCelcius(currentInfo.celsius)
+        weatherInfo.registerRainfall_Probability(currentInfo.rainfall_probability)
+        weatherInfo.registerCity_Name(currentInfo.city_name)
+        self.navigationController?.pushViewController(LastViewController(), animated: true)
     }
     
     func determineImage(_ state : Int, _ cell : CustomCell) {
